@@ -1,31 +1,59 @@
-'use strict';
+const form = document.getElementById('form');
+const username = document.getElementById('username');
+const email = document.getElementById('email');
+const password = document.getElementById('password');
+const password2 = document.getElementById('password2');
 
-const numberOfFilms = +prompt('Сколько фильмов вы уже посмотрели?')
-
-const personalMovieDB = {
-    count: numberOfFilms,
-    movies: {},
-    actors: {},
-    genres: [],
-    privat: false,
+// Show input error message
+function showError(input, message) {
+    const formControl = input.parentElement;
+    formControl.className = 'form-control error';
+    const small = formControl.querySelector('small');
+    small.innerText = message;
 }
 
-for (let i = 0; i < 2; i++) {
-    const lastMovie = prompt('Один из последних просмотренных фильмов?', '')
-    const ratingMovie = prompt('На сколько оцените его?', '');
-    if (lastMovie != null && ratingMovie != null && lastMovie != '' && ratingMovie != '' && lastMovie.length < 50) {
-        personalMovieDB.movies[lastMovie] = ratingMovie;
+//Show success outline
+function showSuccess(input) {
+    const formControl = input.parentElement;
+    formControl.className = 'form-control success';
+}
+
+//Check email is valid
+function isValidEmail(email) {
+    const re =
+        /^(([^<>()[\]\.,;:\s@\"]+(\.[^<>()[\]\.,;:\s@\"]+)*)|(\".+\"))@(([^<>()[\]\.,;:\s@\"]+\.)+[^<>()[\]\.,;:\s@\"]{2,})$/i;
+    return re.test(String(email).toLowerCase());
+};
+
+
+
+//event listeners
+form.addEventListener('submit', function (e) {
+    e.preventDefault();
+
+    if (username.value === '') {
+        showError(username, 'Username is required');
     } else {
-        i--;
+        showSuccess(username);
     }
-}
 
-if (personalMovieDB.count < 10) {
-    console.log("Просмотрено довольно мало фильмов");
-} else if (personalMovieDB.count >= 10 && personalMovieDB.count < 30) {
-    console.log("Вы классический зритель")
-} else if (personalMovieDB.count >= 30) {
-    console.log("Вы киноман")
-} else {
-    console.log('Произошла ошибка!')
-}
+    if (email.value === '') {
+        showError(email, 'Email is required');
+    } else if (!isValidEmail(email.value)) {
+        showError(email, 'Email is not valid');
+    } else {
+        showSuccess(email);
+    }
+
+    if (password.value === '') {
+        showError(password, 'Password is required');
+    } else {
+        showSuccess(password);
+    }
+
+    if (password2.value === '') {
+        showError(password2, 'Password is required too!');
+    } else {
+        showSuccess(password2);
+    }
+})
